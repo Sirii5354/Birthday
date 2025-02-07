@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Countdown to Custom Date</title>
+    
+    <!-- Google Font -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@600;800&display=swap" rel="stylesheet">
+
+    <!-- Three.js Library for Particle Effect -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+
+    <style>
+        :root {
+            --color-white: #ffffff;
+            --color-black: #121212;
+            --color-glass: rgba(255, 255, 255, 0.05);
+            --color-shadow: 0 0 25px rgba(0, 0, 0, 0.5);
+        }
+
+        * {
+            padding: 0;
+            margin: 0;
+            box-sizing: border-box;
+            font-family: "Poppins", sans-serif;
+            color: var(--color-white);
+        }
+
+        body {
+            overflow: hidden;
+            background: transparent;
+        }
+
+        canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: -1;
+        }
+
+        .wrapper {
+            position: absolute;
+            transform: translate(-50%, -50%);
+            top: 50%;
+            left: 50%;
+            font-size: 16px;
+            text-align: center;
+        }
+
+        .heading {
+            margin-bottom: 3em;
+        }
+
+        .heading h1 {
+            text-shadow: var(--color-shadow);
+            font-size: 6.2em;
+            font-weight: 800;
+            letter-spacing: 0.15em;
+        }
+
+        .heading h3 {
+            font-size: 1.6em;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+            font-weight: 600;
+            background-color: var(--color-glass);
+            backdrop-filter: blur(12px);
+            box-shadow: var(--color-shadow);
+            padding: 8px 30px;
+            display: inline-block;
+        }
+
+        .countdown {
+            width: 95vw;
+            display: flex;
+            justify-content: space-around;
+            gap: 10px;
+        }
+
+        .box {
+            width: 28vmin;
+            height: 29vmin;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: space-evenly;
+            position: relative;
+        }
+
+        span.num {
+            background-color: var(--color-glass);
+            backdrop-filter: blur(12px);
+            height: 100%;
+            width: 100%;
+            display: grid;
+            place-items: center;
+            font-size: 4em;
+            box-shadow: var(--color-shadow);
+            border-radius: 0.1em;
+        }
+
+        span.text {
+            font-size: 1em;
+            background-color: var(--color-white);
+            color: var(--color-black);
+            display: block;
+            width: 80%;
+            position: relative;
+            text-align: center;
+            bottom: 20px;
+            padding: 0.7em 0;
+            font-weight: 600;
+            border-radius: 0.3em;
+            box-shadow: var(--color-shadow);
+        }
+    </style>
+</head>
+<body>
+
+    <div class="wrapper">
+        <div class="heading">
+            <h3>Countdown To Birthday of World's Most Beautiful girl</h3>
+          
+            <h1>18 Feb 2025</h1>
+        </div>
+        <div class="countdown">
+            <div class="box">
+                <span class="num" id="day-box">00</span>
+                <span class="text">Days</span>
+            </div>
+            <div class="box">
+                <span class="num" id="hr-box">00</span>
+                <span class="text">Hours</span>
+            </div>
+            <div class="box">
+                <span class="num" id="min-box">00</span>
+                <span class="text">Minutes</span>
+            </div>
+            <div class="box">
+                <span class="num" id="sec-box">00</span>
+                <span class="text">Seconds</span>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let dayBox = document.getElementById("day-box");
+        let hrBox = document.getElementById("hr-box");
+        let minBox = document.getElementById("min-box");
+        let secBox = document.getElementById("sec-box");
+
+        let endDate = new Date(2025, 1, 18, 0, 0, 0);
+        let endTime = endDate.getTime();
+
+        function countdown() {
+            let todayDate = new Date();
+            let todayTime = todayDate.getTime();
+            let remainingTime = endTime - todayTime;
+            let oneMin = 60 * 1000;
+            let oneHr = 60 * oneMin;
+            let oneDay = 24 * oneHr;
+
+            let addZeroes = (num) => (num < 10 ? `0${num}` : num);
+
+            if (remainingTime <= 0) {
+                clearInterval(i);
+                document.querySelector(".countdown").innerHTML = `<h1>Countdown Has Expired</h1>`;
+            } else {
+                let daysLeft = Math.floor(remainingTime / oneDay);
+                let hrsLeft = Math.floor((remainingTime % oneDay) / oneHr);
+                let minsLeft = Math.floor((remainingTime % oneHr) / oneMin);
+                let secsLeft = Math.floor((remainingTime % oneMin) / 1000);
+
+                dayBox.textContent = addZeroes(daysLeft);
+                hrBox.textContent = addZeroes(hrsLeft);
+                minBox.textContent = addZeroes(minsLeft);
+                secBox.textContent = addZeroes(secsLeft);
+            }
+        }
+
+        let i = setInterval(countdown, 1000);
+        countdown();
+
+        // Particle Effect Background
+        const scene = new THREE.Scene();
+        const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+        const renderer = new THREE.WebGLRenderer();
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        document.body.appendChild(renderer.domElement);
+
+        const geometry = new THREE.BufferGeometry();
+        const vertices = [];
+        const colors = [];
+
+        const numParticles = 8000;
+
+        for (let i = 0; i < numParticles; i++) {
+            let x = (Math.random() - 0.5) * 1200;
+            let y = (Math.random() - 0.5) * 1200;
+            let z = (Math.random() - 0.5) * 1200;
+            vertices.push(x, y, z);
+
+            let color = new THREE.Color();
+            color.setHSL(Math.random(), 1.0, 0.7);
+            colors.push(color.r, color.g, color.b);
+        }
+
+        geometry.setAttribute('position', new THREE.Float32BufferAttribute(vertices, 3));
+        geometry.setAttribute('color', new THREE.Float32BufferAttribute(colors, 3));
+
+        const textureLoader = new THREE.TextureLoader();
+        const particleTexture = textureLoader.load("https://threejs.org/examples/textures/sprites/circle.png");
+
+        const material = new THREE.PointsMaterial({
+            size: 5,
+            map: particleTexture,
+            transparent: true,
+            opacity: 0.9,
+            vertexColors: true,
+            blending: THREE.AdditiveBlending,
+            depthWrite: false
+        });
+
+        const points = new THREE.Points(geometry, material);
+        scene.add(points);
+
+        camera.position.z = 600;
+
+        function animate() {
+            requestAnimationFrame(animate);
+            points.rotation.y += 0.001;
+            points.rotation.x += 0.0005;
+            renderer.render(scene, camera);
+        }
+
+        animate();
+    </script>
+
+</body>
+</html>

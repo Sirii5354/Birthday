@@ -3,10 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Countdown to Custom Date</title>
+    
+    <title>Birthday Surprise</title>
     
     <!-- Google Font -->
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@600;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;800&display=swap" rel="stylesheet">
 
     <!-- Three.js Library for Particle Effect -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
@@ -28,7 +29,7 @@
         }
 
         body {
-            overflow: default;
+            overflow: auto;
             background: transparent;
         }
 
@@ -39,6 +40,14 @@
             z-index: -1;
         }
 
+        #fireworks {
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: 0;
+            display: none;
+        }
+
         .wrapper {
             position: absolute;
             transform: translate(-50%, -50%);
@@ -46,6 +55,7 @@
             left: 50%;
             font-size: 16px;
             text-align: center;
+            z-index: 1;
         }
 
         .heading {
@@ -114,32 +124,134 @@
             border-radius: 0.3em;
             box-shadow: var(--color-shadow);
         }
+
+        .celebration-message {
+            display: none;
+            background-color: var(--color-glass);
+            backdrop-filter: blur(12px);
+            padding: 2em;
+            border-radius: 1em;
+            box-shadow: var(--color-shadow);
+            max-width: 600px;
+            width: 90%;
+            text-align: center;
+            
+        }
+
+        .celebration-message h2 {
+            font-size: 2.5em;
+            margin-bottom: 0.5em;
+            color: #ffd700;
+            text-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
+            animation: glow 2s ease-in-out infinite;
+        }
+
+        @keyframes glow {
+            0%, 100% {
+                text-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
+            }
+            50% {
+                text-shadow: 0 0 20px rgba(255, 215, 0, 0.8),
+                             0 0 30px rgba(255, 215, 0, 0.6);
+            }
+        }
+
+        .birthday-image {
+            width: 100%;
+            max-width: 400px;
+            height: auto;
+            border-radius: 1em;
+            margin: 1.5em 0;
+            box-shadow: var(--color-shadow);
+            animation: float 3s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% {
+                transform: translateY(0);
+            }
+            50% {
+                transform: translateY(-10px);
+            }
+        }
+
+        .birthday-message {
+            font-size: 1.2em;
+            line-height: 1.6;
+            color: #e9d5ff;
+            margin-top: 1.5em;
+            padding: 1em;
+            background-color: rgba(255, 255, 255, 0.1);
+            border-radius: 0.5em;
+            backdrop-filter: blur(8px);
+        }
+
+        .music-controls {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            z-index: 100;
+            background-color: var(--color-glass);
+            backdrop-filter: blur(12px);
+            padding: 10px;
+            border-radius: 8px;
+            display: none;
+        }
+
+        .music-controls button {
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 1.5em;
+            padding: 5px;
+            transition: transform 0.2s;
+        }
+
+        .music-controls button:hover {
+            transform: scale(1.1);
+        }
     </style>
 </head>
 <body>
-
+    <canvas id="fireworks"></canvas>
+    <audio id="birthday-music" loop>
+        <source src="Birthday.mp3" type="audio/mpeg">
+    </audio>
+    <div class="music-controls" id="music-controls">
+        <button id="toggle-music" title="Toggle Music">🔊</button>
+    </div>
     <div class="wrapper">
-        <div class="heading">
-            <h3>Countdown To Birthday of World's Most Beautiful girl</h3>
-          
-            <h1>18 Feb 2025</h1>
+        <div id="countdown-container">
+            <div class="heading">
+                <h3>Countdown To Birthday of World's Most Beautiful girl</h3>
+                <h1>18 Feb 2025</h1>
+            </div>
+            <div class="countdown">
+                <div class="box">
+                    <span class="num" id="day-box">00</span>
+                    <span class="text">Days</span>
+                </div>
+                <div class="box">
+                    <span class="num" id="hr-box">00</span>
+                    <span class="text">Hours</span>
+                </div>
+                <div class="box">
+                    <span class="num" id="min-box">00</span>
+                    <span class="text">Minutes</span>
+                </div>
+                <div class="box">
+                    <span class="num" id="sec-box">00</span>
+                    <span class="text">Seconds</span>
+                </div>
+            </div>
         </div>
-        <div class="countdown">
-            <div class="box">
-                <span class="num" id="day-box">00</span>
-                <span class="text">Days</span>
-            </div>
-            <div class="box">
-                <span class="num" id="hr-box">00</span>
-                <span class="text">Hours</span>
-            </div>
-            <div class="box">
-                <span class="num" id="min-box">00</span>
-                <span class="text">Minutes</span>
-            </div>
-            <div class="box">
-                <span class="num" id="sec-box">00</span>
-                <span class="text">Seconds</span>
+        <div class="celebration-message" id="celebration-message">
+            <h2>🎉 Happy Birthday Siri Aunty! 🎉</h2>
+            <img src="aunty (1).jpeg" 
+                 alt="Birthday Celebration" 
+                 class="birthday-image">
+            <div class="birthday-message">
+                Happy birthday Sushma 😁😁💖
             </div>
         </div>
     </div>
@@ -149,6 +261,32 @@
         let hrBox = document.getElementById("hr-box");
         let minBox = document.getElementById("min-box");
         let secBox = document.getElementById("sec-box");
+        let countdownContainer = document.getElementById("countdown-container");
+        let celebrationMessage = document.getElementById("celebration-message");
+        let fireworksCanvas = document.getElementById("fireworks");
+        let fireworksCtx = fireworksCanvas.getContext("2d");
+        let birthdayMusic = document.getElementById("birthday-music");
+        let musicControls = document.getElementById("music-controls");
+        let toggleMusicBtn = document.getElementById("toggle-music");
+
+        // Music Controls
+        toggleMusicBtn.addEventListener("click", () => {
+            if (birthdayMusic.paused) {
+                birthdayMusic.play();
+                toggleMusicBtn.textContent = "🔊";
+            } else {
+                birthdayMusic.pause();
+                toggleMusicBtn.textContent = "🔈";
+            }
+        });
+
+        // Set canvas sizes
+        function resizeCanvas() {
+            fireworksCanvas.width = window.innerWidth;
+            fireworksCanvas.height = window.innerHeight;
+        }
+        resizeCanvas();
+        window.addEventListener('resize', resizeCanvas);
 
         let endDate = new Date(2025, 1, 18, 0, 0, 0);
         let endTime = endDate.getTime();
@@ -165,7 +303,14 @@
 
             if (remainingTime <= 0) {
                 clearInterval(i);
-                document.querySelector(".countdown").innerHTML = `<h1>Countdown Has Expired</h1>`;
+                countdownContainer.style.display = "none";
+                celebrationMessage.style.display = "block";
+                fireworksCanvas.style.display = "block";
+                musicControls.style.display = "block";
+                birthdayMusic.play().catch(error => {
+                    console.log("Auto-play prevented. Please use the music controls to start the music.");
+                });
+                startFireworks();
             } else {
                 let daysLeft = Math.floor(remainingTime / oneDay);
                 let hrsLeft = Math.floor((remainingTime % oneDay) / oneHr);
@@ -182,12 +327,68 @@
         let i = setInterval(countdown, 1000);
         countdown();
 
+        // Fireworks Animation
+        function createFirework(x, y) {
+            const particles = [];
+            const colors = ['#ff0000', '#ffd700', '#ff69b4', '#00ff00', '#4169e1'];
+
+            for (let i = 0; i < 50; i++) {
+                const angle = (Math.PI * 2 * i) / 50;
+                const velocity = 2 + Math.random() * 2;
+                particles.push({
+                    x,
+                    y,
+                    vx: Math.cos(angle) * velocity,
+                    vy: Math.sin(angle) * velocity,
+                    color: colors[Math.floor(Math.random() * colors.length)],
+                    alpha: 1
+                });
+            }
+
+            function animate() {
+                fireworksCtx.globalCompositeOperation = 'destination-out';
+                fireworksCtx.fillStyle = 'rgba(0, 0, 0, 0.1)';
+                fireworksCtx.fillRect(0, 0, fireworksCanvas.width, fireworksCanvas.height);
+                fireworksCtx.globalCompositeOperation = 'source-over';
+
+                let stillAlive = false;
+                particles.forEach(p => {
+                    p.x += p.vx;
+                    p.y += p.vy;
+                    p.vy += 0.05;
+                    p.alpha *= 0.99;
+
+                    if (p.alpha > 0.01) stillAlive = true;
+
+                    fireworksCtx.beginPath();
+                    fireworksCtx.arc(p.x, p.y, 2, 0, Math.PI * 2);
+                    fireworksCtx.fillStyle = p.color + Math.floor(p.alpha * 255).toString(16).padStart(2, '0');
+                    fireworksCtx.fill();
+                });
+
+                if (stillAlive) {
+                    requestAnimationFrame(animate);
+                }
+            }
+
+            animate();
+        }
+
+        function startFireworks() {
+            function launchFirework() {
+                const x = Math.random() * fireworksCanvas.width;
+                createFirework(x, fireworksCanvas.height);
+                setTimeout(launchFirework, 1000 + Math.random() * 1000);
+            }
+            launchFirework();
+        }
+
         // Particle Effect Background
         const scene = new THREE.Scene();
         const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
         const renderer = new THREE.WebGLRenderer();
         renderer.setSize(window.innerWidth, window.innerHeight);
-        document.body.appendChild(renderer.domElement);
+        document.body.insertBefore(renderer.domElement, document.body.firstChild);
 
         const geometry = new THREE.BufferGeometry();
         const vertices = [];
@@ -236,6 +437,5 @@
 
         animate();
     </script>
-
 </body>
 </html>
